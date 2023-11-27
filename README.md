@@ -14,4 +14,3 @@ This project is organized as a Cargo workspace with the following directories:
 - `floppier-client` - An Embedded Rust program that receives MIDI events from the server over USB and is responsible for controlling the individual Floppy Disk Drives
 - `floppier-proto` - A Rust library that contains shared protocol data structures which are sent in USB packets
 - `midi` - A directory containing some sample MIDI songs and their configuration files
-- 
