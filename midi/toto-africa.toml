@@ -1,0 +1,5 @@
+# Base options and settings
+[midi]
+path = "./midi/toto-africa.mid"
+parallel_mode = "collapse"
+

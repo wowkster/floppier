@@ -1,0 +1,19 @@
+[workspace]
+resolver = "2"
+members = ["floppier-proto", "floppier-server", "floppier-client"]
+
+[profile.dev.package.floppier-client]
+opt-level = 0
+debug = 2
+debug-assertions = true
+overflow-checks = true
+incremental = true
+codegen-units = 256
+
+[profile.release.package.floppier-client]
+codegen-units = 1
+debug = 2
+debug-assertions = false
+overflow-checks = false
+opt-level = "z"
+incremental = false
