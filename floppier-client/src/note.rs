@@ -2,6 +2,9 @@ use defmt::Format;
 
 use crate::TIMER_RESOLUTION_US;
 
+/// An enum of all the possible notes representable in MIDI
+/// 
+/// https://www.music.mcgill.ca/~ich/classes/mumt306/StandardMIDIfileformat.html#BMA1_3
 #[allow(unused, non_camel_case_types)]
 #[rustfmt::skip]
 #[repr(u8)]
@@ -21,40 +24,25 @@ pub enum Note {
     C9, Cs9, D9, Ds9, E9, F9, Fs9, G9, 
 }
 
-#[allow(unused)]
 impl Note {
+    /// Convert a note to a period in microseconds
     pub const fn period_us(self) -> u32 {
         NOTE_TO_PERIOD_TABLE[self as usize]
     }
 
-    pub const fn half_period_us(self) -> u32 {
-        NOTE_TO_PERIOD_TABLE[self as usize] / 2
-    }
-
+    /// Certain notes are not playable due to the limitations of the hardware.
+    /// e.x. Very low notes and very high notes do not sound good on the floppy drives and risk damaging them.
+    /// 
+    /// Notes that are not playable are stored with a period of 0
     pub const fn is_playable(self) -> bool {
         self.period_us() != 0
     }
 
-    pub const fn ticks(self) -> u32 {
-        NOTE_TO_TICKS_TABLE[self as usize]
-    }
-
-    pub const fn double_ticks(self) -> u32 {
-        NOTE_TO_DOUBLE_TICKS_TABLE[self as usize]
-    }
-
-    pub fn next_playable(self) -> Self {
-        let mut note = self;
-        loop {
-            note = match note {
-                Note::G9 => return Note::C0,
-                note => Note::try_from(note as u8 + 1).unwrap(),
-            };
-
-            if note.is_playable() {
-                return note;
-            }
-        }
+    /// Convert a note to half the number of ticks required to play that note.
+    /// 
+    /// i.e. the number of ticks to play half a period (the time between toggling the step pin).
+    pub const fn half_ticks(self) -> u32 {
+        NOTE_TO_HALF_TICKS_TABLE[self as usize]
     }
 }
 
@@ -70,6 +58,9 @@ impl TryFrom<u8> for Note {
     }
 }
 
+/// Table that maps MIDI note numbers to period in microseconds
+/// 
+/// https://www.sensorsone.com/frequency-to-period-calculator/
 #[rustfmt::skip]
 const NOTE_TO_PERIOD_TABLE: [u32;128] = [
     // C-1 to B-1
@@ -117,6 +108,9 @@ const NOTE_TO_PERIOD_TABLE: [u32;128] = [
     0,      0,      0,      0, 
 ];
 
+/// Table that maps MIDI note numbers to the number of ticks required to play that note
+/// 
+/// = period / timer_resolution
 #[rustfmt::skip]
 const NOTE_TO_TICKS_TABLE: [u32;128] = [
     NOTE_TO_PERIOD_TABLE[0] / TIMER_RESOLUTION_US, NOTE_TO_PERIOD_TABLE[1] / TIMER_RESOLUTION_US, 
@@ -185,8 +179,12 @@ const NOTE_TO_TICKS_TABLE: [u32;128] = [
     NOTE_TO_PERIOD_TABLE[126] / TIMER_RESOLUTION_US, NOTE_TO_PERIOD_TABLE[127] / TIMER_RESOLUTION_US,
 ];
 
+/// Table that maps MIDI note numbers to half the numbr of ticks required to play that note.
+/// This corresponds to the number of ticks to play half a period (the time between toggling the step pin).
+/// 
+/// = period / (timer_resolution * 2)
 #[rustfmt::skip]
-const NOTE_TO_DOUBLE_TICKS_TABLE: [u32;128] = [
+const NOTE_TO_HALF_TICKS_TABLE: [u32;128] = [
     NOTE_TO_TICKS_TABLE[0] / 2, NOTE_TO_TICKS_TABLE[1] / 2, NOTE_TO_TICKS_TABLE[2] / 2, NOTE_TO_TICKS_TABLE[3] / 2,
     NOTE_TO_TICKS_TABLE[4] / 2, NOTE_TO_TICKS_TABLE[5] / 2, NOTE_TO_TICKS_TABLE[6] / 2, NOTE_TO_TICKS_TABLE[7] / 2,
     NOTE_TO_TICKS_TABLE[8] / 2, NOTE_TO_TICKS_TABLE[9] / 2, NOTE_TO_TICKS_TABLE[10] / 2, NOTE_TO_TICKS_TABLE[11] / 2,

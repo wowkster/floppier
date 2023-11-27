@@ -9,6 +9,11 @@ use floppier_proto::{FloppierC2SMessage, FloppierS2CMessage};
 static mut READ_BUFFER: Vec<u8> = Vec::new();
 static mut READ_BUFFER_LEN: usize = 0;
 
+/// Update the read buffer with any new data from the serial port
+///
+/// This gets called during USB event interrupts because data packets are sometimes split across
+/// multiple USB packets. This function will read the data from the serial port and append it to the
+/// internal read buffer until a full message has been received.
 pub fn update_read_buffer(serial: &mut SerialPort<UsbBus>) {
     let mut buf = [0u8; 64];
     let count = match serial.read(&mut buf) {
@@ -34,7 +39,6 @@ pub fn update_read_buffer(serial: &mut SerialPort<UsbBus>) {
 
         let len = u16::from_le_bytes([len_bytes[0], len_bytes[1]]) as usize;
 
-        // debug!("allocating read buffer of length {}", len);
         *read_buffer = Vec::with_capacity(len);
         *read_buffer_len = len;
 
@@ -49,7 +53,11 @@ pub fn update_read_buffer(serial: &mut SerialPort<UsbBus>) {
     );
 }
 
-pub fn receive_message() -> Option<FloppierS2CMessage> {
+/// Get the received message from the read buffer if one has been fully received
+/// 
+/// Must be called after a call to `update_read_buffer` to ensure that the read buffer
+/// does not overflow and is up to date
+pub fn get_received_message() -> Option<FloppierS2CMessage> {
     let read_buffer = unsafe { &mut READ_BUFFER };
     let read_buffer_len = unsafe { &mut READ_BUFFER_LEN };
 
@@ -71,6 +79,7 @@ pub fn receive_message() -> Option<FloppierS2CMessage> {
     Some(message)
 }
 
+/// Send a message to the server over USB serial
 pub fn send_message(
     serial: &mut SerialPort<UsbBus>,
     message: FloppierC2SMessage,

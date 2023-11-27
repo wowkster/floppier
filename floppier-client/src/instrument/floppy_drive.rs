@@ -10,11 +10,7 @@ use rp_pico::hal::gpio::{
 
 use crate::note::Note;
 
-pub trait Instrument {
-    fn set_note(&mut self, note: Option<Note>);
-    fn tick(&mut self);
-    fn reset(&mut self, delay: &mut Delay);
-}
+use super::Instrument;
 
 pub type FloppyDrivePin = Pin<DynPinId, FunctionSio<SioOutput>, DynPullType>;
 
@@ -133,7 +129,7 @@ impl Instrument for FloppyDrive {
 
         self.current_tick += 1;
 
-        if self.current_tick >= note.double_ticks() {
+        if self.current_tick >= note.half_ticks() {
             self.toggle_pin();
             self.current_tick = 0;
         }

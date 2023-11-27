@@ -11,7 +11,7 @@ use floppier_proto::{
     FloppierC2SMessage, FloppierS2CMessage, LimitedMidiMessage, MidiEvent, SetConfig,
 };
 
-use io::{receive_message, send_message, update_read_buffer};
+use io::{get_received_message, send_message, update_read_buffer};
 use panic_probe as _;
 
 use embedded_alloc::Heap;
@@ -38,7 +38,7 @@ use hal::{
 };
 
 use crate::{
-    instrument::{FloppyDrive, Instrument},
+    instrument::{floppy_drive::FloppyDrive, Instrument},
     note::Note,
 };
 
@@ -222,7 +222,7 @@ unsafe fn USBCTRL_IRQ() {
     update_read_buffer(serial);
 
     // Check if we have received a full message
-    let Some(message) = receive_message() else {
+    let Some(message) = get_received_message() else {
         return;
     };
 

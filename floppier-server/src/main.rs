@@ -131,6 +131,9 @@ fn main() -> Result<()> {
 
     /* Send the MIDI events to the client */
 
+    // TODO: Group the events by their time offsets
+    //       https://docs.rs/itertools/latest/itertools/trait.Itertools.html#method.group_by
+    
     let mut last_tick = 0;
 
     for event in midi_file.events {
