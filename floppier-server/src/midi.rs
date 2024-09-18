@@ -44,7 +44,7 @@ pub fn parse_midi_file<P: AsRef<Path>>(midi_path: P) -> Result<MidiFile> {
         .first()
         .with_context(|| "could not get first track")?;
 
-    let metadata = parse_metadata_track(meta_track)?;
+    let (first_non_meta_index, metadata) = parse_track_metadata(meta_track)?;
 
     /* Calculate Tempo Values */
 
@@ -53,17 +53,31 @@ pub fn parse_midi_file<P: AsRef<Path>>(midi_path: P) -> Result<MidiFile> {
 
     /* Absolutize the time for each track */
 
-    let data_tracks = smf.tracks[1..]
-        .iter()
-        .enumerate()
-        .map(|(i, track)| absolutize_track(track, (i + 1) as u16))
-        .collect::<Vec<_>>();
+    let data_tracks = match smf.header.format {
+        // Single track with metadata at the beginning
+        Format::SingleTrack => {
+            vec![absolutize_track(
+                &meta_track[first_non_meta_index..].to_vec(),
+                1,
+            )]
+        }
+        // Single metadata track + data tracks
+        Format::Parallel => smf.tracks[1..]
+            .iter()
+            .enumerate()
+            .map(|(i, track)| absolutize_track(track, (i + 1) as u16))
+            .collect::<Vec<_>>(),
+        Format::Sequential => unimplemented!(),
+    };
 
     let num_tracks = data_tracks.len() as u16;
 
     ensure!(!data_tracks.is_empty(), "no data tracks found in MIDI file");
 
-    assert_eq!(data_tracks.len(), 2, "only 2 data tracks are supported");
+    // assert!(
+    //     data_tracks.len() <= 2,
+    //     "no more than 2 data tracks are supported"
+    // );
 
     /* Combine the data tracks into a single list of events */
 
@@ -148,9 +162,9 @@ impl Display for MidiMetadata {
                 "sharp(s)"
             },
             if self.key_signature.1 {
-                "major"
-            } else {
                 "minor"
+            } else {
+                "major"
             }
         )?;
 
@@ -158,7 +172,9 @@ impl Display for MidiMetadata {
     }
 }
 
-fn parse_metadata_track(track: &Track) -> Result<MidiMetadata> {
+/// Parses the metadata from the given track and returns the index of the first
+/// non-metadata event as well as the parsed metadata
+fn parse_track_metadata(track: &Track) -> Result<(usize, MidiMetadata)> {
     let mut track_name = None;
     let mut text = Vec::new();
     let mut copyright = Vec::new();
@@ -166,15 +182,22 @@ fn parse_metadata_track(track: &Track) -> Result<MidiMetadata> {
     let mut time_signature = None;
     let mut key_signature = None;
 
-    for TrackEvent { delta, kind } in track.iter() {
+    assert!(!track.is_empty());
+
+    let mut next_index = 0;
+
+    for (i, TrackEvent { delta, kind }) in track.iter().enumerate() {
         assert_eq!(
             delta.as_int(),
             0,
             "metadata track should have no delta time"
         );
 
+        dbg!(kind);
+
         let TrackEventKind::Meta(msg) = kind else {
-            unimplemented!("only meta events are supported in the metadata track")
+            next_index = i;
+            break;
         };
 
         match msg {
@@ -211,6 +234,18 @@ fn parse_metadata_track(track: &Track) -> Result<MidiMetadata> {
                 key_signature = Some((*key, *scale));
             }
             MetaMessage::EndOfTrack => {}
+            MetaMessage::SequencerSpecific(data) => {
+                eprintln!("Unused SequencerSpecific metadata: {:?}", data)
+            }
+            MetaMessage::SmpteOffset(smpte_time) => {
+                eprintln!("Unused SmpteOffset: {:?}", smpte_time)
+            }
+            MetaMessage::MidiChannel(channel) => {
+                eprintln!("Unused MidiChannel: {}", channel)
+            }
+            MetaMessage::MidiPort(port) => {
+                eprintln!("Unused MidiPort: {}", port)
+            }
             _ => {
                 unimplemented!("unsupported meta event: {:?}", msg)
             }
@@ -222,27 +257,26 @@ fn parse_metadata_track(track: &Track) -> Result<MidiMetadata> {
         tempo = Some(500_000)
     };
 
-    ensure!(
-        track_name.is_some(),
-        "metadata track must have a track name"
-    );
+    // ensure!(
+    //     track_name.is_some(),
+    //     "metadata track must have a track name"
+    // );
     ensure!(
         time_signature.is_some(),
         "metadata track must have a time signature"
     );
-    ensure!(
-        key_signature.is_some(),
-        "metadata track must have a key signature"
-    );
 
-    Ok(MidiMetadata {
-        track_name,
-        text,
-        copyright,
-        tempo: tempo.unwrap(),
-        time_signature: time_signature.unwrap(),
-        key_signature: key_signature.unwrap(),
-    })
+    Ok((
+        next_index,
+        MidiMetadata {
+            track_name,
+            text,
+            copyright,
+            tempo: tempo.unwrap(),
+            time_signature: time_signature.unwrap(),
+            key_signature: key_signature.unwrap_or((0, false)), // Default to C major
+        },
+    ))
 }
 
 fn absolutize_track(track: &Track, track_number: u16) -> Vec<AbsoluteMidiEvent> {

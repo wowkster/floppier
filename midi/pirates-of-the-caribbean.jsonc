@@ -1,0 +1,34 @@
+{
+    // Base options and settings
+    "midi": {
+        "path": "./midi/pirates-of-the-caribbean.mid",
+        "parallel_mode": "collapse"
+    },
+    "floppy_drives": [
+        {
+            "id": 1,
+            "drive_count": 8,
+            "movement": true,
+            "tracks": {
+                // Right Hand
+                "1": {
+                    "1": [
+                        0,
+                        1,
+                        2,
+                        3,
+                        4
+                    ]
+                },
+                // Left Hand
+                "2": {
+                    "2": [
+                        5,
+                        6,
+                        7
+                    ]
+                }
+            }
+        }
+    ]
+}

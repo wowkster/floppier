@@ -47,12 +47,13 @@ impl Client {
 
         self.port.write_all(&len.to_le_bytes())?;
         self.port.write_all(&data)?;
+        self.port.flush()?;
 
         Ok(())
     }
 
     pub fn receive(&mut self) -> Result<FloppierC2SMessage> {
-        const TIMEOUT_MS: u128 = 2_000;
+        const TIMEOUT_MS: u128 = 10_000;
 
         let start_time = std::time::Instant::now();
 

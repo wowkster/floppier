@@ -14,6 +14,7 @@ pub enum FloppierS2CMessage {
     Hello,
     SetConfig(SetConfig),
     MidiEvent(MidiEvent),
+    End,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -23,6 +24,7 @@ pub enum FloppierC2SMessage {
     SetConfigAck,
     Ready,
     MidiEventAck,
+    EndAck,
     Error(#[cfg_attr(feature = "defmt", defmt(Debug2Format))] String),
 }
 
@@ -31,7 +33,13 @@ pub enum FloppierC2SMessage {
 pub struct SetConfig {
     /// Strategy to use to resolve parallel notes
     pub parallel_mode: ParallelMode,
-    
+
+    /// Whether or not to move the drive heads while playing
+    pub movement: bool,
+
+    /// The number of drives in the stack (used for bit timing)
+    pub drive_count: u8,
+
     /// Map of track numbers to tracks which map channel numbers to ports
     #[cfg_attr(feature = "defmt", defmt(Debug2Format))]
     pub tracks: BTreeMap<u16, BTreeMap<u8, Vec<u8>>>,

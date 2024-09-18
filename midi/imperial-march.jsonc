@@ -1,0 +1,42 @@
+{
+    // Base options and settings
+    "midi": {
+        "path": "./midi/imperial-march.mid",
+        "parallel_mode": "collapse"
+    },
+    "floppy_drives": [
+        {
+            "id": 1,
+            "drive_count": 8,
+            "movement": true,
+            "tracks": {
+                "1": {
+                    // Trumpet
+                    "1": [
+                        0
+                    ],
+                    // Cello
+                    "2": [
+                        1
+                    ],
+                    //Strings
+                    "3": [
+                        2
+                    ],
+                    "4": [
+                        3
+                    ],
+                    "5": [
+                        4
+                    ],
+                    "6": [
+                        5
+                    ],
+                    "7": [
+                        6
+                    ]
+                }
+            }
+        }
+    ]
+}

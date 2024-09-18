@@ -1,6 +1,5 @@
 use alloc::vec::Vec;
 
-use defmt::debug;
 use rp_pico::hal::usb::UsbBus;
 use usbd_serial::SerialPort;
 
@@ -21,8 +20,11 @@ pub fn update_read_buffer(serial: &mut SerialPort<UsbBus>) {
         Ok(count) => count,
     };
 
-    // debug!("received {} bytes", count);
-    // debug!("buf: {:?}", &buf[..count]);
+    #[cfg(feature = "io_debug")]
+    {
+        defmt::debug!("received {} bytes", count);
+        defmt::debug!("buf: {:?}", &buf[..count]);
+    }
 
     let read_buffer = unsafe { &mut READ_BUFFER };
     let read_buffer_len = unsafe { &mut READ_BUFFER_LEN };
@@ -39,7 +41,9 @@ pub fn update_read_buffer(serial: &mut SerialPort<UsbBus>) {
 
         let len = u16::from_le_bytes([len_bytes[0], len_bytes[1]]) as usize;
 
-        *read_buffer = Vec::with_capacity(len);
+        read_buffer.clear();
+        read_buffer.reserve(len);
+
         *read_buffer_len = len;
 
         read_buffer.extend_from_slice(&buf[2..count]);
@@ -54,7 +58,7 @@ pub fn update_read_buffer(serial: &mut SerialPort<UsbBus>) {
 }
 
 /// Get the received message from the read buffer if one has been fully received
-/// 
+///
 /// Must be called after a call to `update_read_buffer` to ensure that the read buffer
 /// does not overflow and is up to date
 pub fn get_received_message() -> Option<FloppierS2CMessage> {
@@ -71,7 +75,10 @@ pub fn get_received_message() -> Option<FloppierS2CMessage> {
     let message = ciborium::from_reader(&read_buffer[..])
         .expect("Failed to parse a message from the read buffer!");
 
-    debug!("received message: {:?}", message);
+    #[cfg(feature = "io_debug")]
+    {
+        defmt::debug!("received message: {:?}", message);
+    }
 
     read_buffer.clear();
     *read_buffer_len = 0;

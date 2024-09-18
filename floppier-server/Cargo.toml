@@ -11,7 +11,8 @@ clap = { version = "4.4.8", features = ["derive"] }
 midly = { version = "0.5.3", features = ["strict"] }
 serde = { version = "1.0.192", features = ["derive"] }
 serialport = "4.2.2"
-toml = "0.8.8"
 termion = "2.0.3"
 ciborium = "0.2.1"
 floppier-proto = { path = '../floppier-proto' }
+jsonc-parser = { version = "0.23.0", features = ["serde"] }
+serde_json = "1.0.127"
