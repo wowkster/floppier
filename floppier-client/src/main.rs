@@ -1,3 +1,5 @@
+#![allow(non_snake_case)]
+
 #![no_std]
 #![no_main]
 
@@ -21,7 +23,8 @@ use rp_pico::{
     hal::{
         self,
         clocks::UsbClock,
-        fugit::{ ExtU32, ExtU64},
+        fugit::{ExtU32, ExtU64},
+        pio::PIOExt,
         timer::{Alarm, Alarm0},
         Timer,
     },
@@ -43,7 +46,8 @@ use crate::io::{get_received_message, send_message, update_read_buffer};
 use floppier_client::{
     floppy_drive::{Direction, DriveState, FloppyDrive},
     note::Note,
-    shift_register::SN74HC595, TIMER_RESOLUTION_US,
+    shift_register::SN74HC595,
+    TIMER_RESOLUTION_US,
 };
 
 #[global_allocator]
@@ -135,14 +139,18 @@ fn main() -> ! {
         &mut pac.RESETS,
     );
 
-    let mut shift_register = SN74HC595::new(
-        pins.gpio2.reconfigure(),
-        pins.gpio3.reconfigure(),
-        pins.gpio4.reconfigure(),
+    let (pio, sm0, _, _, _) = pac.PIO0.split(&mut pac.RESETS);
+
+    let shift_register = SN74HC595::new(
+        pio,
+        sm0,
+        (
+            pins.gpio2.reconfigure(),
+            pins.gpio3.reconfigure(),
+            pins.gpio4.reconfigure(),
+        ),
         pins.gpio5.reconfigure(),
     );
-
-    shift_register.set_output_enabled(true);
 
     unsafe {
         SHIFT_REGISTER = Some(shift_register);
@@ -249,20 +257,18 @@ unsafe fn USBCTRL_IRQ() {
     critical_section::with(|cs| {
         match message {
             FloppierS2CMessage::Hello => {
-
                 if !is_state(ClientState::WaitingForHello) {
                     defmt::warn!("Resetting state due to new hello packet!");
 
                     pac::NVIC::mask(hal::pac::Interrupt::TIMER_IRQ_0);
 
                     let mut floppy_drives = FLOPPY_DRIVES.borrow(cs).borrow_mut();
-    
+
                     for drive in floppy_drives.iter_mut() {
                         drive.set_note(None);
                     }
-    
                 }
-               
+
                 defmt::info!("Connected to server!");
 
                 let _ = send_message(serial, FloppierC2SMessage::HelloAck);
@@ -289,6 +295,9 @@ unsafe fn USBCTRL_IRQ() {
 
                 defmt::info!("Resetting drives...");
 
+                let shift_register = unsafe { SHIFT_REGISTER.as_mut().unwrap() };
+                shift_register.set_output_enabled(true);
+
                 reset_drives();
 
                 /* Transition to ready  */
@@ -299,7 +308,7 @@ unsafe fn USBCTRL_IRQ() {
                 let _ = send_message(serial, FloppierC2SMessage::Ready);
 
                 pac::NVIC::unmask(hal::pac::Interrupt::TIMER_IRQ_0);
-                
+
                 defmt::info!("Started timer interrupt!")
             }
             FloppierS2CMessage::MidiEvent(event) => {
@@ -344,7 +353,8 @@ unsafe fn USBCTRL_IRQ() {
                 } else {
                     defmt::warn!(
                         "No drives found for track {} and channel {}",
-                        track, channel
+                        track,
+                        channel
                     );
                 }
 
@@ -366,6 +376,9 @@ unsafe fn USBCTRL_IRQ() {
                 for drive in floppy_drives.iter_mut() {
                     drive.set_note(None);
                 }
+
+                let shift_register = unsafe { SHIFT_REGISTER.as_mut().unwrap() };
+                shift_register.set_output_enabled(true);
 
                 let _ = send_message(serial, FloppierC2SMessage::EndAck);
                 set_state(ClientState::WaitingForHello);
@@ -418,10 +431,9 @@ fn set_config(config: SetConfig) {
 }
 
 fn reset_drives() {
-    critical_section::with(|cs| {
-        let floppy_drives = FLOPPY_DRIVES.borrow(cs).borrow();
-        let shift_register = unsafe { SHIFT_REGISTER.as_mut().unwrap() };
+    critical_section::with(|_| {
         let mut timer = unsafe { TIMER }.unwrap();
+        let shift_register = unsafe { SHIFT_REGISTER.as_mut().unwrap() };
 
         let mut state = DriveState {
             drive_select: true,
@@ -432,21 +444,11 @@ fn reset_drives() {
         for _ in 0..3 {
             for _ in 0..FloppyDrive::NUM_TRACKS {
                 state.step = true;
-
-                for _ in 0..floppy_drives.len() {
-                    shift_register.write_byte(state.into());
-                }
-                shift_register.pulse_storage_clock();
-
+                shift_register.write_byte_to_all(state.into());
                 timer.delay_ms(3);
 
                 state.step = false;
-
-                for _ in 0..floppy_drives.len() {
-                    shift_register.write_byte(state.into());
-                }
-                shift_register.pulse_storage_clock();
-
+                shift_register.write_byte_to_all(state.into());
                 timer.delay_ms(3);
             }
 
@@ -464,20 +466,23 @@ fn reset_drives() {
 fn TIMER_IRQ_0() {
     let alarm = unsafe { ALARM0.as_mut().unwrap() };
     let timer = unsafe { TIMER }.unwrap();
-    let shift_register = unsafe { SHIFT_REGISTER.as_mut().unwrap() };
 
     let start_time = timer.get_counter();
-    
+
     critical_section::with(|cs| {
         /* Tick all the drives and write their values to the shift registers */
 
         let mut floppy_drives = FLOPPY_DRIVES.borrow(cs).borrow_mut();
+        let shift_register = unsafe { SHIFT_REGISTER.as_mut().unwrap() };
 
-        for drive in floppy_drives.iter_mut() {
-            shift_register.write_byte(drive.tick().into())
+        let mut data = [DriveState::default().into(); MAX_DRIVE_COUNT];
+        let start_idx = MAX_DRIVE_COUNT - floppy_drives.len();
+
+        for (i, drive) in floppy_drives.iter_mut().enumerate() {
+            data[start_idx + i] = drive.tick().into();
         }
-     
-        shift_register.pulse_storage_clock();
+
+        shift_register.write_bytes(&data);
 
         /* Schedule the next alarm */
 

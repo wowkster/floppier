@@ -7,7 +7,10 @@ use defmt_rtt as _;
 use embedded_alloc::LlffHeap as Heap;
 use embedded_hal::digital::OutputPin;
 use panic_probe as _;
-use rp_pico::{entry, hal};
+use rp_pico::{
+    entry,
+    hal::{self, pio::PIOExt},
+};
 
 use hal::{
     clocks::{init_clocks_and_plls, Clock},
@@ -26,7 +29,7 @@ static HEAP: Heap = Heap::empty();
 
 #[entry]
 fn main() -> ! {
-    info!("Floppier Can Node v{}", env!("CARGO_PKG_VERSION"));
+    info!("Floppier v{}", env!("CARGO_PKG_VERSION"));
 
     {
         use core::mem::MaybeUninit;
@@ -65,10 +68,16 @@ fn main() -> ! {
     let mut led_pin = pins.gpio25.into_push_pull_output();
     led_pin.set_high().unwrap();
 
+    let (pio, sm0, _, _, _) = pac.PIO0.split(&mut pac.RESETS);
+
     let mut shift_register = SN74HC595::new(
-        pins.gpio2.reconfigure(),
-        pins.gpio3.reconfigure(),
-        pins.gpio4.reconfigure(),
+        pio,
+        sm0,
+        (
+            pins.gpio2.reconfigure(),
+            pins.gpio3.reconfigure(),
+            pins.gpio4.reconfigure(),
+        ),
         pins.gpio5.reconfigure(),
     );
 
@@ -80,27 +89,15 @@ fn main() -> ! {
         direction: Direction::Reverse,
     };
 
-    const NUM_DRIVES: usize = 3;
-
     #[allow(clippy::empty_loop)]
     loop {
         for _ in 0..FloppyDrive::NUM_TRACKS {
             state.step = true;
-
-            for _ in 0..NUM_DRIVES {
-                shift_register.write_byte(state.into());
-            }
-            shift_register.pulse_storage_clock();
-
+            shift_register.write_byte_to_all(state.into());
             delay.delay_ms(1);
 
             state.step = false;
-
-            for _ in 0..NUM_DRIVES {
-                shift_register.write_byte(state.into());
-            }
-            shift_register.pulse_storage_clock();
-
+            shift_register.write_byte_to_all(state.into());
             delay.delay_ms(250);
         }
 

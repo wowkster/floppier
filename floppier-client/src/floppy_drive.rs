@@ -60,7 +60,7 @@ impl FloppyDrive {
 
         self.current_note_tick += 1;
         self.current_direction_tick += 1;
-        let drive_select = self.current_note_tick > 2;
+        let drive_select = self.current_note_tick > 1;
 
         if drive_select {
             self.current_period_tick += 1;
@@ -71,7 +71,7 @@ impl FloppyDrive {
             }
         }
 
-        let direction = if self.current_direction_tick > 4 {
+        let direction = if self.current_direction_tick > 2 {
             self.current_direction
         } else {
             self.current_direction.inverse()

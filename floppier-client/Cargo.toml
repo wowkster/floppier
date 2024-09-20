@@ -20,6 +20,8 @@ floppier-proto = { path = "../floppier-proto", features = ["defmt"] }
 heapless = "0.8.0"
 num_enum = { version = "0.7.3", default-features = false }
 panic-probe = { version = "0.3.0", features = ["print-defmt"] }
+pio = "0.2.1"
+pio-proc = "0.2.2"
 rp-pico = "0.9.0"
 seq-macro = "0.3.5"
 usb-device = { version = "0.3.2" }

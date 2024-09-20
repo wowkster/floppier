@@ -1,0 +1,32 @@
+; PIO driver for the SN74HC595 8-bit shift register to write 8 bytes at a time 
+; and then output them all at once
+;
+; This driver takes control of 3 GPIO pins
+;  - SI/O (Serial Input) [OUT]
+;  - SCLK (Serial Clock) [SET0]
+;  - RCLK (Storage Clock) [SET1]
+.program sn74hc595
+
+.wrap_target
+
+; output the first 32-bits, pulsing the clock cycle after each bit
+set x, 31
+word_1:
+out pins, 1 [2]
+set pins, 0b01 [1]
+set pins, 0b00 [1]
+jmp x--, word_1
+
+; output the last 32-bits, pulsing the clock cycle after each bit
+set x, 31
+word_2:
+out pins, 1 [2]
+set pins, 0b01 [1]
+set pins, 0b00 [1]
+jmp x--, word_2
+
+; pulse the store line to outut the data we just wrote
+set pins, 0b10 [1]
+set pins, 0b00 [1]
+
+.wrap
