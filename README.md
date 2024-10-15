@@ -5,7 +5,7 @@ This project is inspired by [Moppy](https://github.com/Sammy1Am/Moppy2) which is
 This project differs from previous implementations by allowing you to expand to a large number of drives and plans to have support for other instruments as well such as Hard Disk Drives and Flatbed Scanners.
 
 > [!WARNING]
-> This project is still acirtvely in development, so a lot is subject to change 
+> This project is still actively in development, so a lot is subject to change 
 
 ## Project Structure
 
