@@ -500,7 +500,7 @@ fn TIMER_IRQ_0() {
                 .checked_sub(TIMER_RESOLUTION_US.micros::<1, 1_000_000>())
                 .unwrap()
                 .to_micros();
-            defmt::error!(
+            defmt::warn!(
                 "TIMER_IRQ_0 overran alotted time (TIMER_RESOLUTION_US) by {}µs! (total elapsed = {}µs)",
                 overrun_us, 
                 elapsed_time.to_micros(),
