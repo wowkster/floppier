@@ -1,0 +1,620 @@
+(kicad_sch
+	(version 20250114)
+	(generator "eeschema")
+	(generator_version "9.0")
+	(uuid "31ace883-3c66-4c24-8ad2-3e2f731466ac")
+	(paper "USLetter")
+	(title_block
+		(title "Floppier Drive Controller - Slave")
+		(date "2024-10-12")
+		(rev " v1.0")
+		(company "Adrian Wowk")
+	)
+	(lib_symbols)
+	(no_connect
+		(at 62.23 105.41)
+		(uuid "21e2eb33-fb38-4872-b2fe-7d84b11932e3")
+	)
+	(no_connect
+		(at 62.23 100.33)
+		(uuid "2bbe9f00-fa8e-48d7-8489-4b2f80016ab5")
+	)
+	(no_connect
+		(at 62.23 97.79)
+		(uuid "9123efcd-0c30-4a8d-8fb0-f035d2e7887d")
+	)
+	(wire
+		(pts
+			(xy 54.61 90.17) (xy 63.5 90.17)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0b158efc-b0d9-466a-b976-572f8131aff0")
+	)
+	(wire
+		(pts
+			(xy 54.61 59.69) (xy 63.5 59.69)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0e9f0785-e289-400a-a949-70593dc5873d")
+	)
+	(wire
+		(pts
+			(xy 54.61 52.07) (xy 63.5 52.07)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1de80d79-0812-446b-ab84-7a5cb09a353b")
+	)
+	(wire
+		(pts
+			(xy 54.61 82.55) (xy 63.5 82.55)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "23753ae2-0a43-49ea-9fac-e3d83d0f0d65")
+	)
+	(wire
+		(pts
+			(xy 62.23 100.33) (xy 63.5 100.33)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2fe49362-3885-4eb1-b7de-13d9c411797e")
+	)
+	(wire
+		(pts
+			(xy 54.61 95.25) (xy 63.5 95.25)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "53ff3d14-3455-4ec7-aa01-ba940d8de668")
+	)
+	(wire
+		(pts
+			(xy 54.61 57.15) (xy 63.5 57.15)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5705346f-9dd9-438f-8b0d-a3e6c35baf46")
+	)
+	(wire
+		(pts
+			(xy 54.61 54.61) (xy 63.5 54.61)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "77d88c61-82ae-48cc-9df2-da47ed7471b7")
+	)
+	(wire
+		(pts
+			(xy 54.61 87.63) (xy 63.5 87.63)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a241c66e-285e-46c4-9ac6-4ddaa0bb4fff")
+	)
+	(wire
+		(pts
+			(xy 54.61 33.02) (xy 63.5 33.02)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ab84ec2a-1365-47a4-a01e-75df33ebc46f")
+	)
+	(wire
+		(pts
+			(xy 54.61 30.48) (xy 63.5 30.48)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "bde53fed-5105-4b8a-b937-ca7c894bd10e")
+	)
+	(wire
+		(pts
+			(xy 54.61 85.09) (xy 63.5 85.09)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "becf8b3e-2267-4897-932c-97c484d0059d")
+	)
+	(wire
+		(pts
+			(xy 54.61 63.5) (xy 63.5 63.5)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c1c1835c-2b62-4660-9b83-abee35ccf7f7")
+	)
+	(wire
+		(pts
+			(xy 62.23 97.79) (xy 63.5 97.79)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cdc31863-9202-4e99-8d13-e769edebff4f")
+	)
+	(wire
+		(pts
+			(xy 62.23 105.41) (xy 63.5 105.41)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "df18d26a-c8fc-4ef7-857d-90ff5b1d9288")
+	)
+	(sheet
+		(at 63.5 46.99)
+		(size 26.67 21.59)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "1ddec73e-5668-4a61-b09f-43f56310757b")
+		(property "Sheetname" "Floppy"
+			(at 63.5 46.2784 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "floppy.kicad_sch"
+			(at 63.5 69.1646 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "SER_IN" input
+			(at 63.5 52.07 180)
+			(uuid "bf63cad2-cd9b-4e6c-bf36-480ca6bd69b3")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "SER_CLK" input
+			(at 63.5 54.61 180)
+			(uuid "ce81f4bf-6059-4cc9-a4ff-dc59fbd80625")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "STR_CLK" input
+			(at 63.5 57.15 180)
+			(uuid "07d9a948-4cdc-4cb0-8420-0dbe0a15e516")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "~{OE}" input
+			(at 63.5 59.69 180)
+			(uuid "d6086654-2c3f-40c1-ba13-64db0ed17336")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "~{TRK_0}" output
+			(at 63.5 63.5 180)
+			(uuid "03150ffa-10b2-4184-a6b6-7b7125238ae0")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "drive_controller_master"
+				(path "/31ace883-3c66-4c24-8ad2-3e2f731466ac"
+					(page "5")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 24.13 25.4)
+		(size 30.48 93.98)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "4c46bb41-db97-405d-9b14-14566640a675")
+		(property "Sheetname" "RP24040"
+			(at 24.13 24.6884 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "rp2040.kicad_sch"
+			(at 24.13 119.9646 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "~{SR_OE}" output
+			(at 54.61 59.69 0)
+			(uuid "40a8d62d-5b38-47e7-8c90-d5c517f9d413")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "SR_SER_IN" output
+			(at 54.61 52.07 0)
+			(uuid "2d4fd7f2-ef99-47cf-8f8b-9c34909a8a0f")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "SR_STR_CLK" output
+			(at 54.61 57.15 0)
+			(uuid "9f687689-9862-46e0-9a63-1ae4510d2518")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "SR_SER_CLK" output
+			(at 54.61 54.61 0)
+			(uuid "c9643450-5ed5-438b-a15d-4f894a59e7cf")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "CAN_MOSI" output
+			(at 54.61 87.63 0)
+			(uuid "46b6d3eb-3420-40e0-b99f-b5fbfae1df57")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "~{CAN_INT}" input
+			(at 54.61 95.25 0)
+			(uuid "5d09a34e-66b0-4d1e-a2e4-2a51794a03ab")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "D-" bidirectional
+			(at 54.61 33.02 0)
+			(uuid "181dad40-8dc1-4dec-81fb-492a8604014b")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "CAN_SCK" output
+			(at 54.61 85.09 0)
+			(uuid "c0ba66d9-da34-454f-b718-19d1db951954")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "~{CAN_CS}" output
+			(at 54.61 82.55 0)
+			(uuid "70d60c1c-e268-4d8e-89be-9cfe65b30620")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "CAN_MISO" input
+			(at 54.61 90.17 0)
+			(uuid "85204d1c-fe17-486b-bc09-60f601b8d0d3")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "D+" bidirectional
+			(at 54.61 30.48 0)
+			(uuid "e82e42c0-72ac-43fb-8fa4-947a2646c76b")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(pin "~{TRK_0}" input
+			(at 54.61 63.5 0)
+			(uuid "a6634417-4c71-44bd-aaa4-92959cf67f62")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(instances
+			(project "drive_controller_master"
+				(path "/31ace883-3c66-4c24-8ad2-3e2f731466ac"
+					(page "3")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 63.5 77.47)
+		(size 26.67 41.91)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "8bfefe59-8aca-4256-b54b-00091b8f871a")
+		(property "Sheetname" "CAN"
+			(at 63.5 76.7584 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "can.kicad_sch"
+			(at 63.5 119.9646 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "~{INT0}" bidirectional
+			(at 63.5 97.79 180)
+			(uuid "d891592d-e4c8-4da1-8ebe-5c7969121d55")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "~{INT}" output
+			(at 63.5 95.25 180)
+			(uuid "4ecd117b-3f3e-4c2d-8315-337980366489")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "~{INT1}" bidirectional
+			(at 63.5 100.33 180)
+			(uuid "2aabf991-0799-477b-bdbc-e613e7c060bd")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "MOSI" input
+			(at 63.5 87.63 180)
+			(uuid "dfd54612-d7c1-49c7-923e-27ed803b80e9")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "MISO" output
+			(at 63.5 90.17 180)
+			(uuid "af74efca-9a21-470b-ac5d-8e1582f94992")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "CS" input
+			(at 63.5 82.55 180)
+			(uuid "9d9fdc55-45e6-46a1-83a8-7d604d315552")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "SCK" input
+			(at 63.5 85.09 180)
+			(uuid "1d60add9-ef80-4c0c-b992-3a1061b5056e")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "STBY" input
+			(at 63.5 105.41 180)
+			(uuid "8590350e-6133-4288-8221-1c28867d6ed8")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "drive_controller_master"
+				(path "/31ace883-3c66-4c24-8ad2-3e2f731466ac"
+					(page "4")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 63.5 25.4)
+		(size 26.67 12.7)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "b7a4fc0c-2799-4576-ad86-abc1dae725f3")
+		(property "Sheetname" "USB & Power"
+			(at 63.5 24.6884 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "power.kicad_sch"
+			(at 63.5 38.6846 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(pin "D+" bidirectional
+			(at 63.5 30.48 180)
+			(uuid "c4473dd9-c7dd-4dd6-80d2-d98fdc149c35")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(pin "D-" bidirectional
+			(at 63.5 33.02 180)
+			(uuid "f95dc258-be38-4278-ade8-5485dca7a4b1")
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(instances
+			(project "drive_controller_master"
+				(path "/31ace883-3c66-4c24-8ad2-3e2f731466ac"
+					(page "2")
+				)
+			)
+		)
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)

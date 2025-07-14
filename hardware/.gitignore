@@ -1,4 +1,6 @@
-*.gerbers
-fp-info-cache
-*-backups
-*.kicad_prl
+**/*.gerbers
+**/fp-info-cache
+**/*-backups
+**/*.kicad_prl
+**/jlcpcb/production_files
+**/jlcpcb/gerber
